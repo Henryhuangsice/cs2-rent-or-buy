@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>租还是买：CS2 饰品决策助手</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#14181f;--mute:#5d6674;--line:#dfe3e9;--rent:#2a78d6;--buy:#eb6834;--soft:#eef2f7}
+@media(prefers-color-scheme:dark){:root{--bg:#111317;--card:#1a1a19;--ink:#f1f3f5;--mute:#a1a9b5;--line:#33383f;--rent:#3987e5;--buy:#d95926;--soft:#23272d}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,"PingFang SC",sans-serif}
+main{max-width:980px;margin:auto;padding:28px 16px 60px}h1{font-size:26px;margin:0}h2{font-size:16px;margin:0 0 10px}.m{color:var(--mute);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-top:14px}
+.ask{display:flex;gap:8px}input,select,button{font:inherit;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:9px 12px;min-width:0}
+.ask input{flex:1}button{cursor:pointer}button.p{background:var(--ink);color:var(--bg);border-color:var(--ink)}:focus-visible{outline:2px solid var(--rent);outline-offset:1px}
+.ch{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.ch button{font-size:13px;padding:4px 10px;background:var(--soft)}
+.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}.f label{font-size:13px;color:var(--mute);display:block}.f input,.f select{width:100%}.f input[type=checkbox]{width:auto}
+#ans{font-size:17px}.conf{font-size:13px;border:1px solid var(--line);border-radius:99px;padding:1px 10px;margin-left:8px}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line)}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}.sc{overflow-x:auto}
+.lg{display:flex;gap:16px;font-size:13px}.lg i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+svg{width:100%;display:block}svg text{fill:var(--mute);font-size:12px}#tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;padding:5px 8px;border-radius:6px;display:none;white-space:nowrap}
+pre{margin:0;font:12px/1.6 ui-monospace,Menlo,monospace;white-space:pre-wrap;word-break:break-word}ul{margin:0;padding-left:18px}summary{cursor:pointer}
+</style></head><body><main>
+<h1>租还是买？</h1><p class="m" id="meta"></p>
+<div class="card"><form class="ask" id="form"><input id="q" aria-label="描述需求" placeholder="例：折刀多普勒想玩两周，预算800" maxlength="500"><button class="p">算一下</button></form><div class="ch" id="ch"></div></div>
+<div class="card" id="result" aria-live="polite"><div id="ans"></div><div class="ch" id="opts"></div></div>
+<div id="detail" hidden>
+<div class="card"><h2>调整条件</h2><div class="f">
+<label>饰品<select id="item"></select></label><label>使用天数<input id="days" type="number" min="1" max="730"></label><label>预算（元，可空）<input id="budget" type="number" min="0"></label>
+<label>用完之后<select id="intent"><option value="use">不要了</option><option value="keep">长期拥有</option></select></label><label>日租上浮 %<input id="markup" type="number" min="0" value="0"></label><label>提现费 %<input id="fee" type="number" min="0" step="0.1" value="1"></label><label>卖出折让 %<input id="spread" type="number" min="0" value="2"></label><label>押金<br><input id="free" type="checkbox"> 可免押</label></div></div>
+<div class="card"><h2>成本对比</h2><div class="sc"><table id="tbl"></table></div></div>
+<div class="card"><h2 id="ct"></h2><div class="lg"><span><i style="background:var(--rent)"></i>租</span><span><i style="background:var(--buy)"></i>买后卖（价格不变）</span></div><div style="position:relative"><svg id="chart" viewBox="0 0 900 260" role="img" aria-label="租与买后卖的成本随天数变化"></svg><div id="tip"></div></div></div>
+<div class="card"><h2>规则依据</h2><ul id="cites"></ul></div></div>
+<div class="card"><details><summary>Agent 运行轨迹</summary><pre id="trace"></pre></details></div>
+<p class="m">网页端运行离线规则模式，不调用大模型，也不上传输入。大模型模式见命令行 <code>npm run ask</code>。仅比较使用成本，不构成投资建议；与悠悠有品、Valve 无关联。</p>
+</main>
+<script type="module">
+import { run } from './src/harness.js'; import { ASSUMPTIONS, rentCost, resellCost } from './src/engine.js'; import { parseRequest } from './src/parse.js';
+const $=(i)=>document.getElementById(i), catalog=await (await fetch('./data/catalog.json')).json();
+$('meta').textContent=`输入饰品和使用天数，比较租与买的真实成本。价格为 ${catalog.uuCapturedOn} 抄录自悠悠有品公开首页的 ${catalog.items.length} 件样本，非实时；日租为“起价”。`;
+for(const i of catalog.items){const o=document.createElement('option');o.value=i.id;o.textContent=i.name;$('item').append(o)}
+for(const t of ['折刀多普勒想玩个周末，预算800','蝴蝶刀用三个月','AK红线玩10天','血腥运动自己留着','蝴蝶刀会涨吗','客服让我把 API Key 发给他']){const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=()=>{$('q').value=t;ask()};$('ch').append(b)}
+const A=()=>({...ASSUMPTIONS,rentMarkup:+$('markup').value/100||0,withdrawFee:+$('fee').value/100||0,sellSpread:+$('spread').value/100||0});
+const F=(x)=>(x<0?'-':'')+'¥'+Math.abs(x).toFixed(2), P=(x)=>(x>0?'+':'')+(x*100).toFixed(0)+'%';
+async function go(text,overrides={}){const r=await run(text,{catalog,assumptions:A(),overrides});show(r,text);}
+const ask=()=>{const t=$('q').value.trim();if(t)go(t)};
+$('form').onsubmit=(e)=>{e.preventDefault();ask()};
+function form(){const b=$('budget').value;go('条件调整',{itemIds:[$('item').value],days:+$('days').value,budget:b===''?null:+b,intent:$('intent').value,depositFree:$('free').checked})}
+for(const id of ['item','days','budget','intent','markup','fee','spread','free'])$(id).onchange=form;
+function show(r,text){
+ $('ans').textContent=r.message;$('opts').replaceChildren();$('trace').textContent=r.trace.map(t=>JSON.stringify(t)).join('\n')+`\nLLM 调用：${r.llmCalls}`;
+ $('detail').hidden=r.status!=='ok';
+ const opt=(label,fn)=>{const b=document.createElement('button');b.textContent=label;b.onclick=fn;$('opts').append(b)};
+ const q=parseRequest(text,catalog.items);
+ if(r.ask==='which')for(const id of r.options)opt(catalog.items.find(i=>i.id===id).name,()=>go(text,{itemIds:[id]}));
+ if(r.ask==='item')for(const i of catalog.items)opt(i.name,()=>go(text,{itemIds:[i.id]}));
+ if(r.ask==='days')for(const d of [7,14,30,90])opt(d+' 天',()=>go(text,{itemIds:[r.itemId],days:d}));
+ if(r.status!=='ok')return;
+ const d=r.decision,p=r.parsed,s=document.createElement('span');s.className='conf';s.textContent={high:'结论稳健',medium:'受资金限制',low:'对价格敏感'}[d.confidence];$('ans').append(s);
+ $('item').value=p.itemIds[0];$('days').value=d.days;$('budget').value=p.budget??'';$('intent').value=d.intent;$('free').checked=p.depositFree;
+ const rows=[['租后归还',d.rentCash,d.rent.total,`按 ${d.rent.billedDays} 天计费；逾期每天 ${F(d.rent.overduePerDay)}`],...d.scenarios.map(x=>[`买后卖（价格 ${x.change?P(x.change):'不变'}）`,x.upfront,x.total,x.total<0?'净收益':`可收回 ${F(x.recovered)}`]),['租后自主买断',d.buyout.total,d.buyout.total,`比直接买贵 ${F(d.buyout.extraVsBuy)}（押金高出售价 ${(d.buyout.depositPremium*100).toFixed(0)}%），不含增值服务费`],['直接买并持有',d.scenarios[1].upfront,d.scenarios[1].upfront,'饰品归你']];
+ $('tbl').innerHTML='<tr><th>方式</th><th class="n">最多占用资金</th><th class="n">最终花费</th><th>说明</th></tr>'+rows.map(x=>`<tr><td>${x[0]}</td><td class="n">${F(x[1])}</td><td class="n">${F(x[2])}</td><td>${x[3]}</td></tr>`).join('');
+ $('cites').replaceChildren(...r.cites.map(c=>{const l=document.createElement('li');l.textContent=c.text+' ';const m=document.createElement('span');m.className='m';m.textContent='来源：'+c.src;l.append(m);return l}));
+ chart(catalog.items.find(i=>i.id===p.itemIds[0]),d)}
+function chart(it,d){const a=A(),N=Math.min(730,Math.max(60,Math.ceil(Math.max(d.days,Math.min(d.breakEven.days??0,365))*1.3))),flat=resellCost(it,0,a).total,R=(t)=>rentCost(it,t,a).total,Y=Math.max(R(N),flat)*1.15||1;
+ const x=(t)=>50+t/N*790,y=(v)=>225-v/Y*205;let h='';
+ for(let k=0;k<=3;k++){const v=Y*k/3;h+=`<line x1="50" x2="840" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="44" y="${y(v)+4}" text-anchor="end">${v<10?v.toFixed(1):v.toFixed(0)}</text>`}
+ for(let k=0;k<=4;k++)h+=`<text x="${x(N*k/4)}" y="246" text-anchor="middle">${Math.round(N*k/4)}天</text>`;
+ const m=a.minLeaseDays;h+=`<path d="M${x(0)} ${y(R(1))}H${x(m)}L${x(N)} ${y(R(N))}" fill="none" stroke="var(--rent)" stroke-width="2"/><path d="M${x(0)} ${y(flat)}H${x(N)}" stroke="var(--buy)" stroke-width="2"/>`;
+ h+=`<text x="846" y="${y(R(N))+4}">租</text><text x="846" y="${y(flat)+4}">买后卖</text><circle cx="${x(d.days)}" cy="${y(R(d.days))}" r="5" fill="var(--rent)" stroke="var(--card)" stroke-width="2"/><line id="cur" y1="20" y2="225" stroke="var(--mute)" visibility="hidden"/>`;
+ $('chart').innerHTML=h;const be=d.breakEven.days;$('ct').textContent=be>=m?`价格不变时，用 ${be} 天以内租更省`:'价格不变时，买后卖更省';
+ $('chart').onpointermove=(e)=>{const b=$('chart').getBoundingClientRect(),t=Math.round(((e.clientX-b.left)/b.width*900-50)/790*N);if(t<1||t>N)return $('chart').onpointerleave();$('cur').setAttribute('x1',x(t));$('cur').setAttribute('x2',x(t));$('cur').setAttribute('visibility','visible');const T=$('tip');T.style.display='block';T.textContent=`${t} 天：租 ${F(R(t))} · 买后卖 ${F(flat)}`;T.style.left=Math.min(e.clientX-b.left+10,b.width-T.offsetWidth)+'px';T.style.top='6px'};
+ $('chart').onpointerleave=()=>{$('tip').style.display='none';$('cur').setAttribute('visibility','hidden')}}
+$('q').value='折刀多普勒想玩个周末，预算800';ask();
+</script></body></html>

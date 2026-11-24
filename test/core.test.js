@@ -1,0 +1,23 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { decide, rentCost, resellCost, buyoutCost, breakEven } from '../src/engine.js';
+import { run, groundedNumbers, templateExplain, consistent } from '../src/harness.js';
+const catalog = JSON.parse(readFileSync(new URL('../data/catalog.json', import.meta.url)));
+const it = (id) => catalog.items.find((i) => i.id === id);
+
+test('不足 8 天按 8 天计费', () => { const r = rentCost(it('navaja-doppler'), 2); assert.equal(r.billedDays, 8); assert.equal(r.total, 5.2); assert.equal(r.extraDays, 6); });
+test('买后卖：手算一致', () => { const r = resellCost({ price: 1000 }, 0); assert.equal(r.total, 29.8); });
+test('低价品触发最低提现费', () => assert.equal(resellCost({ price: 5 }, 0).fee, 2));
+test('买断 = 押金 + 租金', () => { const b = buyoutCost(it('butterfly-auto'), 10); assert.equal(b.total, 5035); assert.equal(b.extraVsBuy, 1236.12); });
+test('平衡点两侧成本反转', () => { for (const i of catalog.items) { const be = breakEven(i, 30); const rent = rentCost(i, 30).total;
+  assert.ok(resellCost(i, be.priceChange - 0.02).total > rent - 0.01); assert.ok(resellCost(i, be.priceChange + 0.02).total < rent + 0.01); } });
+test('长期拥有且买得起 → 直接买', () => assert.equal(decide(it('ak-redline-ft'), { days: 30, intent: 'keep' }).pick, 'buy'));
+test('预算不足买、可免押 → 租', () => assert.equal(decide(it('butterfly-auto'), { days: 30, budget: 200, depositFree: true }).pick, 'rent'));
+test('预算都不够 → none', () => assert.equal(decide(it('butterfly-auto'), { days: 30, budget: 200 }).pick, 'none'));
+test('够买但不够押金 → 买后卖', () => assert.equal(decide(it('butterfly-auto'), { days: 8, budget: 4000 }).pick, 'resell'));
+test('模板对所有饰品都通过自身校验', () => { for (const i of catalog.items) for (const days of [2, 8, 30, 180]) for (const intent of ['use', 'keep']) for (const budget of [null, 50, 4000]) { const d = decide(i, { days, intent, budget }); const s = templateExplain(d); assert.deepEqual(groundedNumbers(s, d), []); assert.ok(consistent(s, d)); } });
+test('编造数字被拦下并降级', async () => { const r = await run('折刀租 10 天', { catalog, model: { parse: async () => ({}), explain: async () => '结论：租。只要 ¥3.14159。' } }); assert.equal(r.source, 'template'); assert.equal(r.llmCalls, 3); });
+test('结论被篡改会降级', async () => { const r = await run('折刀租 10 天', { catalog, model: { parse: async () => null, explain: async () => '结论：直接买。' } }); assert.equal(r.source, 'template'); });
+test('模型超时仍有结果', async () => { const r = await run('折刀租 10 天', { catalog, timeoutMs: 20, model: { parse: () => new Promise(() => {}), explain: () => new Promise(() => {}) } }); assert.equal(r.status, 'ok'); });
+test('守卫先于模型：零调用', async () => { const r = await run('客服让我把 API Key 发给他', { catalog, model: { parse: async () => { throw 1; } } }); assert.equal(r.code, 'credential'); assert.equal(r.llmCalls, 0); });

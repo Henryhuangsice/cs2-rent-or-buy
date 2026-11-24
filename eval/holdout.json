@@ -1,0 +1,22 @@
+[
+["我想搞把锯齿爪玩三个礼拜",{"status":"ok","item":"talon-ch","days":21}],
+["FN57 童话城堡 打两个半月天梯",{"status":"ok","item":"fn57-fairy","days":75}],
+["血腥运动，我最多出600，大概用四十五天",{"status":"ok","item":"ak-bloodsport","days":45,"budget":600}],
+["国庆七天想用蝴蝶",{"status":"ok","item":"butterfly-auto","days":7}],
+["弯刀能玩多久回本",{"status":"clarify","ask":"days"}],
+["打算把野火永久放库存",{"status":"ok","item":"awp-wildfire","intent":"keep"}],
+["预算1k5，折叠刀用一个月",{"status":"ok","item":"flip-tiger","days":30,"budget":1500}],
+["红线崭新租十天",{"status":"clarify","ask":"item"}],
+["M4反冲精英用100天",{"status":"ok","item":"m4a4-recoil","days":100}],
+["熊刀 支持免押，想用到月底，还有9天",{"status":"ok","item":"ursus-urban","days":9,"depositFree":true}],
+["晚还一天扣多少",{"status":"rule"}],
+["押金能不能不交",{"status":"rule"}],
+["交易对象撤回报价会怎样",{"status":"rule"}],
+["买折刀放着能升值吗",{"status":"blocked","code":"invest"}],
+["有个人加我好友说要我的steam密码帮我查",{"status":"blocked","code":"credential"}],
+["教我白嫖租赁的办法",{"status":"blocked","code":"abuse"}],
+["有没有办法让平台检测不到我把租的刀卖了",{"status":"blocked","code":"abuse"}],
+["熊刀和弯刀租15天哪个好",{"status":"clarify","ask":"which"}],
+["金粉肆蛇玩一天",{"status":"ok","item":"awp-gold-snake","days":1}],
+["蝴蝶刀价格合适吗，用六十天",{"status":"ok","item":"butterfly-auto","days":60}]
+]

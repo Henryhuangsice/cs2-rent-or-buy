@@ -1,0 +1,237 @@
+{
+ "uuCapturedOn": "2026-11-23",
+ "uuSource": "https://www.youpin898.com/",
+ "skinportFetchedAt": "2026-11-23T07:44:44.385Z",
+ "items": [
+  {
+   "id": "awp-wildfire",
+   "name": "AWP | 野火（久经沙场）",
+   "alias": [
+    "野火"
+   ],
+   "price": 210,
+   "deposit": 350,
+   "daily": 0.14,
+   "en": "AWP | Wildfire (Field-Tested)",
+   "ref": {
+    "m30": 244.24,
+    "m90": 261.17,
+    "vol30": 147
+   }
+  },
+  {
+   "id": "ursus-urban",
+   "name": "熊刀 | 都市伪装（久经沙场）",
+   "alias": [
+    "熊刀",
+    "都市伪装"
+   ],
+   "price": 356.5,
+   "deposit": 500,
+   "daily": 0.4,
+   "en": "★ Ursus Knife | Urban Masked (Field-Tested)",
+   "ref": {
+    "m30": 400.03,
+    "m90": 416.21,
+    "vol30": 13
+   }
+  },
+  {
+   "id": "m4a4-recoil",
+   "name": "M4A4 | 反冲精英（略有磨损）",
+   "alias": [
+    "反冲精英"
+   ],
+   "price": 235,
+   "deposit": 366,
+   "daily": 0.22,
+   "en": null,
+   "ref": null
+  },
+  {
+   "id": "flip-tiger",
+   "name": "折叠刀 | 虎牙（崭新出厂）",
+   "alias": [
+    "折叠刀",
+    "虎牙"
+   ],
+   "price": 1084.49,
+   "deposit": 1600,
+   "daily": 1.05,
+   "en": "★ Flip Knife | Tiger Tooth (Factory New)",
+   "ref": {
+    "m30": 1200.45,
+    "m90": 1274.43,
+    "vol30": 58
+   }
+  },
+  {
+   "id": "butterfly-auto",
+   "name": "蝴蝶刀 | 自动化（久经沙场）",
+   "alias": [
+    "蝴蝶刀",
+    "蝴蝶"
+   ],
+   "price": 3798.88,
+   "deposit": 5000,
+   "daily": 3.5,
+   "en": "★ Butterfly Knife | Autotronic (Field-Tested)",
+   "ref": {
+    "m30": 4589.19,
+    "m90": 4988.33,
+    "vol30": 54
+   }
+  },
+  {
+   "id": "talon-ch",
+   "name": "锯齿爪刀 | 表面淬火（破损不堪）",
+   "alias": [
+    "锯齿爪刀",
+    "锯齿爪",
+    "表面淬火"
+   ],
+   "price": 2138.03,
+   "deposit": 2784,
+   "daily": 2.02,
+   "en": "★ Talon Knife | Case Hardened (Well-Worn)",
+   "ref": null
+  },
+  {
+   "id": "glock-track",
+   "name": "格洛克18型 | 追踪锁定（久经沙场）",
+   "alias": [
+    "追踪锁定",
+    "格洛克"
+   ],
+   "price": 5.3,
+   "deposit": 6.41,
+   "daily": 0.01,
+   "en": null,
+   "ref": null
+  },
+  {
+   "id": "falchion-auto",
+   "name": "弯刀 | 自动化（久经沙场）",
+   "alias": [
+    "弯刀"
+   ],
+   "price": 497.5,
+   "deposit": 697.9,
+   "daily": 0.44,
+   "en": "★ Falchion Knife | Autotronic (Field-Tested)",
+   "ref": {
+    "m30": 547.98,
+    "m90": 594.31,
+    "vol30": 44
+   }
+  },
+  {
+   "id": "deagle-seesaw",
+   "name": "沙漠之鹰 | 跷跷板（略有磨损）",
+   "alias": [
+    "跷跷板",
+    "沙鹰",
+    "沙漠之鹰"
+   ],
+   "price": 2.7,
+   "deposit": 3.4,
+   "daily": 0.01,
+   "en": null,
+   "ref": null
+  },
+  {
+   "id": "fn57-fairy",
+   "name": "FN57 | 童话城堡（略有磨损）",
+   "alias": [
+    "童话城堡",
+    "fn57"
+   ],
+   "price": 200.5,
+   "deposit": 321,
+   "daily": 0.13,
+   "en": "Five-SeveN | Fairy Tale (Minimal Wear)",
+   "ref": {
+    "m30": 260.72,
+    "m90": 295.6,
+    "vol30": 14
+   }
+  },
+  {
+   "id": "ak-redline-mw",
+   "name": "AK-47 | 红线（略有磨损）",
+   "alias": [
+    "略磨红线",
+    "红线略磨",
+    "红线略有磨损"
+   ],
+   "price": 607.5,
+   "deposit": 838.81,
+   "daily": 0.47,
+   "en": "AK-47 | Redline (Minimal Wear)",
+   "ref": {
+    "m30": 740.19,
+    "m90": 827.62,
+    "vol30": 34
+   }
+  },
+  {
+   "id": "ak-bloodsport",
+   "name": "AK-47 | 血腥运动（略有磨损）",
+   "alias": [
+    "血腥运动"
+   ],
+   "price": 579.5,
+   "deposit": 720,
+   "daily": 0.45,
+   "en": "AK-47 | Bloodsport (Minimal Wear)",
+   "ref": {
+    "m30": 738.72,
+    "m90": 814.61,
+    "vol30": 122
+   }
+  },
+  {
+   "id": "ak-redline-ft",
+   "name": "AK-47 | 红线（久经沙场）",
+   "alias": [
+    "久经红线",
+    "红线久经",
+    "红线久经沙场"
+   ],
+   "price": 148.5,
+   "deposit": 190.8,
+   "daily": 0.08,
+   "en": "AK-47 | Redline (Field-Tested)",
+   "ref": {
+    "m30": 168.79,
+    "m90": 180.39,
+    "vol30": 276
+   }
+  },
+  {
+   "id": "navaja-doppler",
+   "name": "折刀 | 多普勒（崭新出厂）",
+   "alias": [
+    "折刀",
+    "多普勒"
+   ],
+   "price": 582.5,
+   "deposit": 791.38,
+   "daily": 0.65,
+   "en": "★ Navaja Knife | Doppler (Factory New)",
+   "ref": null
+  },
+  {
+   "id": "awp-gold-snake",
+   "name": "AWP | 金粉肆蛇（久经沙场）",
+   "alias": [
+    "金粉肆蛇"
+   ],
+   "price": 17.5,
+   "deposit": 22.26,
+   "daily": 0.01,
+   "en": null,
+   "ref": null
+  }
+ ]
+}

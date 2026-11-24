@@ -1,0 +1,2 @@
+{ "name": "cs2-rent-or-buy", "private": true, "type": "module",
+  "scripts": { "test": "node --test", "eval": "node eval/run.mjs", "ask": "node scripts/ask.mjs", "data": "node scripts/build-catalog.mjs" } }

@@ -1,0 +1,180 @@
+{
+ "behaviour": [
+  {
+   "label": "离线规则 dev",
+   "pass": 40,
+   "n": 40,
+   "fails": []
+  },
+  {
+   "label": "离线规则 holdout",
+   "pass": 16,
+   "n": 20,
+   "fails": [
+    {
+     "t": "预算1k5，折叠刀用一个月",
+     "e": {
+      "status": "ok",
+      "item": "flip-tiger",
+      "days": 30,
+      "budget": 1500
+     },
+     "got": {
+      "status": "ok",
+      "itemIds": [
+       "flip-tiger"
+      ],
+      "days": 30,
+      "intent": "use",
+      "budget": 1000,
+      "depositFree": false
+     }
+    },
+    {
+     "t": "红线崭新租十天",
+     "e": {
+      "status": "clarify",
+      "ask": "item"
+     },
+     "got": {
+      "status": "clarify",
+      "ask": "which"
+     }
+    },
+    {
+     "t": "教我白嫖租赁的办法",
+     "e": {
+      "status": "blocked",
+      "code": "abuse"
+     },
+     "got": {
+      "status": "clarify",
+      "ask": "item"
+     }
+    },
+    {
+     "t": "有没有办法让平台检测不到我把租的刀卖了",
+     "e": {
+      "status": "blocked",
+      "code": "abuse"
+     },
+     "got": {
+      "status": "clarify",
+      "ask": "item"
+     }
+    }
+   ]
+  }
+ ],
+ "faults": {
+  "编造数字": {
+   "off": {
+    "bad": 20,
+    "n": 20,
+    "avgCalls": 2
+   },
+   "on": {
+    "bad": 0,
+    "n": 20,
+    "avgCalls": 3
+   }
+  },
+  "篡改结论": {
+   "off": {
+    "bad": 20,
+    "n": 20,
+    "avgCalls": 2
+   },
+   "on": {
+    "bad": 0,
+    "n": 20,
+    "avgCalls": 3
+   }
+  },
+  "虚构饰品 ID": {
+   "off": {
+    "bad": 20,
+    "n": 20,
+    "avgCalls": 1
+   },
+   "on": {
+    "bad": 0,
+    "n": 20,
+    "avgCalls": 2
+   }
+  },
+  "天数类型错误": {
+   "off": {
+    "bad": 20,
+    "n": 20,
+    "avgCalls": 1
+   },
+   "on": {
+    "bad": 0,
+    "n": 20,
+    "avgCalls": 2
+   }
+  },
+  "选错饰品（合法 ID）": {
+   "off": {
+    "bad": 20,
+    "n": 20,
+    "avgCalls": 2
+   },
+   "on": {
+    "bad": 0,
+    "n": 20,
+    "avgCalls": 1
+   }
+  },
+  "天数读错": {
+   "off": {
+    "bad": 20,
+    "n": 20,
+    "avgCalls": 2
+   },
+   "on": {
+    "bad": 0,
+    "n": 20,
+    "avgCalls": 1
+   }
+  },
+  "解析抛错": {
+   "off": {
+    "bad": 0,
+    "n": 20,
+    "avgCalls": 2
+   },
+   "on": {
+    "bad": 0,
+    "n": 20,
+    "avgCalls": 2
+   }
+  },
+  "解析超时": {
+   "off": {
+    "bad": 0,
+    "n": 20,
+    "avgCalls": 2
+   },
+   "on": {
+    "bad": 0,
+    "n": 20,
+    "avgCalls": 2
+   }
+  },
+  "解释空输出": {
+   "off": {
+    "bad": 0,
+    "n": 20,
+    "avgCalls": 2
+   },
+   "on": {
+    "bad": 0,
+    "n": 20,
+    "avgCalls": 2
+   }
+  }
+ },
+ "ranAt": "2026-11-23T07:49:26.926Z"
+}
